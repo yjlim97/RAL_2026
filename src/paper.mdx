@@ -1,47 +1,40 @@
 ---
-title: Academic Project Page Template
+title: Personalized Autonomous Driving via Optimal Control with Clearance Constraints from Questionnaires
 authors:
-  - name: Roman Hauksson
-    url: https://roman.technology
-    institution: University of Texas at Dallas
-    notes: ["*", †]
-  - name: Author Two
-    institution: Institution Two
-    notes: ["*", †]
-  - name: Author Three
-    institution: Institution Three
+  - name: Yongjae Lim
+    url: https://yjlim97.github.io/
+    institution: Seoul National University
     notes: ["*"]
-  - name: Author Four
-    institution: Institution Four
-conference: Conference Name
+  - name: Dabin Kim
+    institution: Seoul National University
+  - name: H. Jin Kim
+    url: https://larr.snu.ac.kr/
+    institution: Seoul National University
+    symbol: †
+
+conference: 2026 IEEE International Conference on Robotics and Automation (ICRA)
 notes:
   - symbol: "*"
-    text: author note one
+    text: "First author"
   - symbol: †
-    text: author note two
+    text: "Corresponding author"
+
 links:
   - name: Paper
-    url: https://github.com/RomanHauksson/academic-project-astro-template
+    url: https://arxiv.org/abs/2602.08326
     icon: ri:file-pdf-2-line
-  - name: Code
-    url: https://github.com/RomanHauksson/academic-project-astro-template
+  - name: Questionnaire
+    url: https://docs.google.com/forms/d/e/1FAIpQLSfFUCmlLn1dzrp17jE-ugcUBpI16Ywin6hH7Mu2zTBXsjOh2A/viewform?usp=dialog
+    icon: ri:survey-line
+  - name: Video
+    url: https://www.youtube.com/watch?v=Er0mzk02wtc
+    icon: ri:youtube-line
+  - name: Code (coming soon)
     icon: ri:github-line
-  - name: arXiv
-    url: https://github.com/RomanHauksson/academic-project-astro-template
-    icon: academicons:arxiv
-  - name: Slides
-    url: https://github.com/RomanHauksson/academic-project-astro-template
-    icon: ri:slideshow-2-line
-
-# The color theme of the page. Defaults to "device" (the preference set in the user's brower or operating system). Setting this to "light" or "dark" will override the user's preference. This is useful if your figures only look good in one theme.
-theme: device
-
-# This is the icon that appears in the user's browser tab. To customize, change the favicon.svg file in /public/, or add your own file to /public/ and change the filename here.
+theme: light
 favicon: favicon.svg
-
-# These keys are optional. If a link to your project page is in a Google search result, text message, or social media post, it will often appear as a "link preview card" based on its title, description, favicon, and thumbnail. After you publish your page, you can double check that these previews look right using [this tool](https://linkpreview.xyz/)
-description: Simple project page template for your research paper, built with Astro and Tailwind
-thumbnail: screenshot-light.png
+# description: A preference-aware autonomous-driving planner that converts questionnaire responses into clearance constraints for optimal control.
+# thumbnail: /thumbnail.jpg
 ---
 
 import Video from "./components/Video.astro";
@@ -58,151 +51,112 @@ import Wide from "./components/Wide.astro";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/starwind/tabs";
 import { Comparison } from "./components/Comparison.tsx";
 
-import outside from "./assets/outside.mp4";
-import dogsDiffc from "./assets/dogs-diffc.png"
-import dogsTrue from "./assets/dogs-true.png"
-import dogsMsillm from "@/assets/dogs-msillm.jpg"
 
-<Video src={outside} />
+import thumnail from "./assets/thumnail.jpg";
+import framework from "./assets/framework.jpg";
+import scenarioResult from "./assets/scenario_result.jpg";
+
+
+import exp from "./assets/exp.mp4";
+
+
+
+
+<Figure>
+  <Picture slot="figure" src={thumnail} alt="thumnail" />
+  <Fragment slot="caption">
+  <div style={{ textAlign: "left", width: "100%" }}>
+  Two drivers exhibit distinct preferences. Each driver avoids the unpreferred region (red shaded area in the front camera view) based on their preferences.
+  To achieve personalized driving behavior, we optimize over feasible trajectories that avoid the resulting unpreferred region.
+  </div>
+  </Fragment>
+</Figure>
+
+
+
 
 <HighlightedSection>
 
+
 ## Abstract
 
-This is a template you can use to create a professional project page for your research paper. [See the code for the template and instructions on how to use it yourself on GitHub](https://github.com/RomanHauksson/academic-project-astro-template). It's made with the [Astro web framework](https://astro.build/) and styled with [Tailwind](https://tailwindcss.com/). You write the content in [MDX](https://mdxjs.com/), which enables markdown formatting like **bold**, _italics_, and ~strikethrough~, as well as custom components like <SmallCaps>small caps.</SmallCaps>
+Driving without considering a user's preferred separation distance from surrounding vehicles can cause discomfort and reduce trust in autonomous driving systems. We propose a preference-aware planning framework that explicitly incorporates user-preferred clearance margins into an optimal-control planner. A purpose-built questionnaire captures interaction-relevant preferences over vehicle size, relative speed, lane, relative position, and maneuvers of both the ego and surrounding vehicles. The responses define preference-space constraints for trajectory optimization. Because directly encoding all possible scenarios in a single optimal control problem is computationally intractable for real-time driving, we decompose the original problem into scenario-specific subproblems, solve them in parallel, and select a trajectory using the original objective. Simulations in HighwayEnv show that the proposed planner better aligns with user-preferred clearances than preference-agnostic baselines, while also producing distinct behaviors for conservative and aggressive driver profiles.
 
 </HighlightedSection>
 
-## Visuals
 
-### Picture
-
-Use the `Picture` component to display images. If you have a figure in PDF format, you can pass in its path as the `src` prop and it will be converted into a web-friendly image automatically.
-
-<Picture src={dogsDiffc} alt="Photo of two running dogs, lossily compressed using the DiffC algorithm" />
-
-### Wide visual
-
-I constrained the maximum width of the text column to make sure it's readable even when the screen is wide. But images and other visuals should "break out" and take up more horizontal space: for this, try wrapping them in the `Wide` component.
-
-<Wide>
-  <Picture src={dogsDiffc} alt="Photo of two running dogs, lossily compressed using the DiffC algorithm" />
-</Wide>
-
-### Figure with caption
-
-Wrap a visual in a `Figure` component to add a caption.
+## Method overview
 
 <Figure>
-  <Picture slot="figure" src={dogsDiffc} alt="Photo of two running dogs, lossily compressed using the DiffC algorithm" />
-  <Fragment slot="caption">A photo of two dogs running side-by-side in shallow water, lossily compressed using the [DiffC algorithm](https://jeremyiv.github.io/diffc-project-page/).</Fragment>
+  <Picture slot="figure" src={framework} alt="Overview of the proposed method" />
+  <Fragment slot="caption">
+    <div style={{ textAlign: "left", width: "100%" }}>
+    The proposed framework to achieve personalized driving. Further details are provided in our paper.
+    </div>
+  </Fragment>
 </Figure>
 
-### Comparison slider
 
-Use the `Comparison` component to compare two visuals with an interactive slider.
+Our framework consists of three stages, illustrated by the <span style={{ color: "magenta" }}>magenta</span>, <span style={{ color: "cyan" }}>cyan</span>, and <span style={{ color: "orange" }}>orange</span> shaded regions, respectively. 
+<ol style={{ textAlign: "left", paddingLeft: "1.25rem", marginTop: "0.5rem" }}>
+  <li>
+    <span style={{ color: "magenta" }}>The first stage (questionnaire stage)</span> collects the user-preferred clearance margin through a questionnaire.
+    The questionnaire is available [here](https://docs.google.com/forms/d/e/1FAIpQLSfFUCmlLn1dzrp17jE-ugcUBpI16Ywin6hH7Mu2zTBXsjOh2A/viewform?usp=dialog).
+  </li>
 
-<Comparison client:idle >
-  <Picture slot="itemOne" src={dogsDiffc} alt="Photo of two running dogs, lossily compressed using the DiffC algorithm" />
-  <Picture slot="itemTwo" src={dogsTrue} alt="True photo of two dogs running side-by-side in shallow water" />
-</Comparison>
+  <li>
+    <span style={{ color: "cyan" }}>The second stage (parallel trajectory optimization stage)</span> takes the questionnaire responses and the current driving scenario as inputs.
+    The resulting preferences are incorporated as clearance constraints in the optimal control problem, which is then decomposed into scenario-specific subproblems.
+  </li>
 
-### Tab panels
+  <li>
+  <span style={{ color: "orange" }}>Finally, in the third stage (selection stage)</span>, these subproblems are solved in parallel, and one is selected considering the global objective.
+  </li>
+</ol>
 
-Tab panels are a great way to display a labeled collection of related visuals without taking up too much space.
 
-<Tabs defaultValue="true">
-  <TabsList>
-    <TabsTrigger value="true">Ground truth</TabsTrigger>
-    <TabsTrigger value="diffc">DiffC (Flux-dev)</TabsTrigger>
-    <TabsTrigger value="msillm">MS-ILLM</TabsTrigger>
-  </TabsList>
-  <TabsContent value="true">
-    <Picture
-      src={dogsTrue}
-      alt="True photo of two dogs running side-by-side in shallow water"
-    />
-  </TabsContent>
-  <TabsContent value="diffc">
-    <Picture
-      src={dogsDiffc}
-      alt="Photo of two running dogs, lossily compressed using the DiffC algorithm"
-    />
-  </TabsContent>
-  <TabsContent value="msillm">
-    <Picture
-      src={dogsMsillm}
-      alt="Photo of two running dogs, lossily compressed using MS-ILLM"
-    />
-  </TabsContent>
-</Tabs>
 
-### Carousel
 
-A carousel is another useful pattern for a collection of visuals that don't necessarily have meaningful labels.
 
-<Carousel>
-  <CarouselSlide>
-    <Picture src={dogsTrue} alt="True photo of two dogs running side-by-side in shallow water" />
-  </CarouselSlide>
-  <CarouselSlide>
-    <Picture src={dogsDiffc} alt="Photo of two running dogs, lossily compressed using the DiffC algorithm" />
-  </CarouselSlide>
-  <CarouselSlide>
-    <Picture
-      src={dogsMsillm}
-      alt="Photo of two running dogs, lossily compressed using MS-ILLM"
-    />
-  </CarouselSlide>
-</Carousel>
+## Real-vehicle experiments
 
-## Two columns
+We compare two representative driver profiles: an aggressive driver and a conservative driver. 
+The aggressive driver accepts smaller clearance margins and therefore plans more assertive trajectories that pass closer to surrounding vehicles when this improves progress. 
+The conservative driver requires larger clearance margins, leading to more cautious trajectories that keep greater separation from neighboring vehicles. 
+As a result, the same driving scenario produces different planning outcomes.
 
-Use the two columns component to display two columns of content. In this example, the first column contains a YouTube video embed and the second column contains an interactive 3D model viewer. By default, they display side by side, but if the screen is narrow enough (for example, on mobile), they're arranged vertically.
+<Figure>
+  <Picture
+    slot="figure"
+    src={scenarioResult}
+    alt="Planning results for aggressive and conservative drivers"
+  />
+  <Fragment slot="caption">
+    <div style={{ textAlign: "left", width: "100%" }}>
+    Planning results for two representative driver profiles.
+    </div>
+  </Fragment>
+</Figure>
+As shown in the figure above, the aggressive driver plans a more assertive trajectory that passes closer to surrounding vehicles, whereas the conservative driver plans a trajectory with larger clearance margins. 
+These differences arise from the questionnaire-derived preference constraints and demonstrate personalized planning behavior under the same driving scenario.
+In addition, we conduct vehicle experiments to demonstrate the effectiveness of the proposed method.
 
-<TwoColumns>
-  <YouTubeVideo slot="left" videoId="wjZofJX0v4M" />
-  <ModelViewer slot="right" src="/BoxVertexColors.glb" alt="A cube colored with a rainbow gradient" />
-</TwoColumns>
 
-## $\LaTeX$
+<Video src={exp} />
 
-You can also add $\LaTeX$ formulas, rendered during the build process using [$\KaTeX$](https://katex.org/) so they're quick to load for visitors of your project page. You can write them inline, like this: $a^2 + b^2 = c^2$. Or, you can write them as a block:
 
-$$
-\int_a^b f(x) dx
-$$
+Additional comparisons and quantitative evaluations are provided in the paper.
 
-## Citation
 
-If you copy your bibliography into `./bibliography.bib`, you can cite papers using their BibTeX keys, and they'll be automatically formatted and included in the bibliography section at the end. For example: [@vaswani2017attention]. Note that these citations are distinct from footnotes[^mynote], which show up in a separate section if you use them.
 
-[^mynote]: On the web, they should really be called "endnotes", since each page constitutes a full document.
-
-## Table
-
-Add simple tables using [GitHub Flavored Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables):
-
-| Model | Accuracy | F1 score | Training time (hours) |
-| :--- | :---: | :---: | :---: |
-| BERT-base | 0.89 | 0.87 | 4.5 |
-| RoBERTa-large | 0.92 | 0.91 | 7.2 |
-| DistilBERT | 0.86 | 0.84 | 2.1 |
-| XLNet | 0.90 | 0.89 | 6.8 |
 
 ## BibTeX citation
 
-Displaying the BibTeX entry for your paper in a code block makes it easy to copy and paste.
-
 ```bibtex
-@misc{roman2024academic,
-  author = "{Roman Hauksson}",
-  title = "Academic Project Page Template",
-  year = "2024",
-  howpublished = "\url{https://research-template.roman.technology}",
+@inproceedings{lim2026personalized,
+  title = {Personalized Autonomous Driving via Optimal Control with Clearance Constraints from Questionnaires},
+  author = {Lim, Yongjae and Kim, Dabin and Kim, H. Jin},
+  booktitle = {IEEE International Conference on Robotics and Automation (ICRA)},
+  year = {2026}
 }
 ```
-
-## Bibliography
-
-[^ref]

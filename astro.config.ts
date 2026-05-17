@@ -13,6 +13,9 @@ import astroExpressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://yjlim97.github.io",
+  base: "/RAL_2026/",
+
   vite: {
     plugins: [tailwindcss()],
   },
