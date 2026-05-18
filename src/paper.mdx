@@ -27,11 +27,8 @@ links:
   - name: Paper
     url: https://ieeexplore.ieee.org/document/11359671
     icon: ri:file-pdf-2-line
-  - name: Questionnaire
-    url: https://www.youtube.com/watch?v=q97SMjJk61Q&t=5s
-    icon: ri:survey-line
   - name: Video
-    url: https://www.youtube.com/watch?v=Er0mzk02wtc
+    url: https://www.youtube.com/watch?v=q97SMjJk61Q&t=5s
     icon: ri:youtube-line
   - name: Code (coming soon)
     icon: ri:github-line
@@ -61,6 +58,9 @@ import framework from "./assets/method.jpg";
 import result from "./assets/result.jpg";
 
 
+import exp from "./assets/exp.mp4";
+import sim from "./assets/sim.mp4";
+
 
 
 <Figure>
@@ -80,27 +80,16 @@ import result from "./assets/result.jpg";
 
 
 
-## Abstract
-
-Fast replanning of the local trajectory is essential for autonomous robots to ensure safe navigation in crowded environments, as such environments require the robot to frequently update its trajectory due to unexpected and dynamic obstacles.
-In such settings, relying on the single trajectory optimization may not provide sufficient alternatives, making it harder to quickly switch to a safer trajectory and increasing the risk of collisions.
-While parallel trajectory optimization can address this limitation by considering multiple candidates, it depends heavily on well-defined initial guidance, which is difficult to obtain in complex environments.
-In this work, we propose a method for identifying the multimodality of the optimal trajectory distribution for safe navigation in crowded 3D environments without initial guidance.
-Our approach ensures safe trajectory generation by projecting sampled trajectories onto safe constraint sets and clustering them based on their potential to converge to the same locally optimal trajectory.
-This process naturally produces diverse trajectory options without requiring predefined initial guidance.
-Finally, for each trajectory cluster, we utilize the Model Predictive Path Integral framework to determine the optimal control input sequence, which corresponds to the local maxima of a multi-modal optimal trajectory distribution.
-We first validate our approach in simulations, achieving higher success rates than existing methods. 
-Subsequent hardware experiments demonstrate that our fast local trajectory replanning strategy enables a drone to safely navigate crowded environments.
+## Summary
+Crowded and dynamic environments require fast replanning; however, single-trajectory optimization lacks alternative paths, while parallel optimization often relies on predefined initial guidance.
+In this work, we identify multimodal optimal trajectory distributions without initial guidance by projecting sampled trajectories onto safe constraint sets, clustering them, and optimizing each cluster using MPPI. 
+Simulation and hardware experiments demonstrate higher success rates and safe drone navigation in crowded 3D environments.
 </HighlightedSection>
 
 
 
 
 ## Method overview
-In this work, we propose a method for safely replanning multimodal trajectories in complex 3D environments using projection-based trajectory clustering.
-Unlike prior works that rely on predefined guidance to generate multiple candidate trajectories, our method does not depend on any external planning structure.
-
-
 <Figure>
   <Picture slot="figure" src={framework} alt="Overview of the proposed method" />
   <Fragment slot="caption">
@@ -110,19 +99,16 @@ Unlike prior works that rely on predefined guidance to generate multiple candida
     </div>
   </Fragment>
 </Figure>
-
-
-
-
+We propose a method for safely replanning multimodal trajectories in complex 3D environments using projection-based trajectory clustering.
+Unlike prior works that rely on predefined guidance to generate multiple candidate trajectories, our method does not depend on any external planning structure.
 The proposed method consists of three stages:
-
 <ol style={{ textAlign: "left", paddingLeft: "1.25rem", marginTop: "0.5rem" }}>
   <li>
-    First, random control inputs are sampled and projected onto the safe set, represented by affine constraints, to avoid obstacles.
+    Random control input sequences (i.e., trajectory) are sampled and projected onto the safe set, represented by affine constraints, to avoid obstacles.
   </li>
 
   <li>
-    Second, the generated trajectories are clustered according to their projection directions, grouping trajectories that converge to the same local optimum.
+    The generated trajectories are clustered according to their projection directions, grouping trajectories that converge to the same local optimum.
     Without this clustering step, estimating the sampled trajectory probability density function (PDF) via forward KL divergence can lead to mode collapse.
   </li>
 
@@ -140,34 +126,35 @@ The proposed method consists of three stages:
 
 ## Simulation and experiment results
 
-We compare two representative driver profiles: an aggressive driver and a conservative driver. 
-The aggressive driver accepts smaller clearance margins and therefore plans more assertive trajectories that pass closer to surrounding vehicles when this improves progress. 
-The conservative driver requires larger clearance margins, leading to more cautious trajectories that keep greater separation from neighboring vehicles. 
-As a result, the same driving scenario produces different planning outcomes.
 
 <Figure>
   <Picture
     slot="figure"
     src={result}
-    alt="Planning results for aggressive and conservative drivers"
+    alt="Planning results for each sampling-based method"
   />
   <Fragment slot="caption">
     <div style={{ textAlign: "left", width: "100%" }}>
-    Planning results for two representative driver profiles.
+    Planning results for each sampling-based method.
     </div>
   </Fragment>
 </Figure>
-As shown in the figure above, the aggressive driver plans a more assertive trajectory that passes closer to surrounding vehicles, whereas the conservative driver plans a trajectory with larger clearance margins. 
-These differences arise from the questionnaire-derived preference constraints and demonstrate personalized planning behavior under the same driving scenario.
-In addition, we conduct vehicle experiments to demonstrate the effectiveness of the proposed method.
+As shown in the figure above, the map used for planning is shown in (a), and the comparison results are presented in (b)$\sim$(e).
+(b) shows randomly sampled trajectories within the restricted control input range. (c) utilizes SVGD as the initial guidance. (d) employs the projection method for sampling collision-free trajectories. (b) through (d) fail to determine collision-free trajectories because they estimate an unimodal Gaussian distribution on a multi-modal distribution (mode collapse). However, our method (e) can generate multiple trajectories by utilizing clustering. (f) shows the grouping results of ours.
 
 
 
+<Video src={sim} />
 
 
+<Video src={exp} />
 
 
-Additional comparisons and quantitative evaluations are provided in the paper.
+Simulation and hardware experiments demonstrate the effectiveness of the proposed method. 
+The planner operates at 50 ms intervals and generates an average of 1.7 trajectories per planning cycle, consistently producing collision-free trajectories to the goal. 
+Dynamic obstacles move randomly at speeds below 1 m/s and are perceived only within the sensing range, with a detection probability of 0.95. 
+Their future motions are predicted using a constant-velocity model. 
+Additional comparisons, quantitative evaluations, and details are provided in the paper.
 
 
 
